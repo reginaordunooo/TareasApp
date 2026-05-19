@@ -52,6 +52,7 @@ dependencies {
     //room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.material3)
     //ksp
     ksp(libs.androidx.room.compiler)
     // Pruebas instrumentadas del DAO
@@ -59,6 +60,7 @@ dependencies {
     androidTestImplementation(libs.androidx.room.testing)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation("androidx.compose.material:material-icons-extended")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

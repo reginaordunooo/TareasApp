@@ -39,6 +39,7 @@ fun TasksScreen(
     val tasks by viewModel.tareas.collectAsStateWithLifecycle()
 // Estado local: texto del campo de nueva tarea.
     var nuevaTareaTexto by remember { mutableStateOf("") }
+
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
