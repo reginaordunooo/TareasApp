@@ -15,6 +15,13 @@ interface TaskDao {
     )
     fun getAllTasks(): Flow<List<TaskEntity>>
 
+    @Query("""
+        SELECT * FROM tasks
+        WHERE titulo LIKE '%' || :query || '%'
+        ORDER BY creado_en DESC
+    """)
+    fun searchTasks(query: String): Flow<List<TaskEntity>>
+
     @Insert
     suspend fun insert(task: TaskEntity): Long
 

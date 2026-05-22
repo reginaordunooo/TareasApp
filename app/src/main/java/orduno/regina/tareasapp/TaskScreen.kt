@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -37,6 +39,8 @@ fun TasksScreen(
 // collectAsStateWithLifecycle deja de escuchar
 // cuando la pantalla no está visible.
     val tasks by viewModel.tareas.collectAsStateWithLifecycle()
+    val searchInput by viewModel.searchInput.collectAsStateWithLifecycle()
+    val sortOrder   by viewModel.sortOrder.collectAsStateWithLifecycle()
 // Estado local: texto del campo de nueva tarea.
     var nuevaTareaTexto by remember { mutableStateOf("") }
 
@@ -53,6 +57,42 @@ fun TasksScreen(
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
+// ----- Barra de busqueda (NUEVO) -----
+            SearchBar(
+                searchInput = searchInput,
+                onSearchInputChanged = { texto ->
+                    viewModel.onSearchInputChanged(texto)
+                },
+                onSearchClicked = {
+                    viewModel.executeSearch()
+                },
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            // ----- Orden (NUEVO) -----
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                listOf(
+                    "dateDesc" to "Recientes",
+                    "dateAsc"  to "Antiguas",
+                    "titleAz"  to "A - Z",
+                    "titleZa"  to "Z - A"
+                ).forEach { (order, label) ->
+                    FilterChip(
+                        selected = sortOrder == order,
+                        onClick  = { viewModel.onSortOrderChanged(order) },
+                        label    = {
+                            Text(text = label,
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()) },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
 // ----- Lista de tareas -----
             Box(modifier = Modifier.weight(1f)) {
                 if (tasks.isEmpty()) {
